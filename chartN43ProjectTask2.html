@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #head{
+            box-shadow: 5 px;
+            text-align:center;
+            
+        }
+        #canvas-holder{
+            /*border: solid 5px red;
+             position: absolute;
+             padding: 5px;
+          z-index: 15;
+          top: 50%;
+          left: 50%;*/
+         /*margin: -100px 0 0 -150px;*/
+          background: linear-gradient(to bottom, #66ffff -31%, #ffffff 39%);
+        }
+        
+                canvas {
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }	
+            </style>
+        
+        
+        </head>
+        
+        <body>
+            <div id="canvas-holder" style="width:500px; height:600px;">
+                    <canvas id="myChart" ></canvas>
+                </div>
+            
+            <script>
+                $(document).ready(function() {    
+                getChartData();    
+            }); 
+            
+            function getChartData() {
+                var siteUrl = "https://usff.navy.deps.mil/sites/netwarcom/N4-N7/KM/projects/_api/Web/Lists/getbytitle('N-43%20Projects')/items?$select=Title,Department,PercentComplete,Status&$filter=Status ne 'Completed'";
+                //var fullUrl = siteUrl + "/_api/web/lists";
+            
+                $.ajax({
+                    url:siteUrl,
+                    type: "GET",
+                    headers: {
+                    "Accept": "application/json;odata=verbose"
+                    },
+                    success: successHandler,
+                    error: errorHandler
+                    });;
+            }
+            
+            function successHandler(data){
+            var myDataSet = data.d.results;
+            var myLabels = [];
+            var myData = [];
+            $(myDataSet).each(function()
+            {
+            myLabels.push(this.Title);
+            myData.push((this.PercentComplete * 100));
+            });
+            myData.push(0); // creates a '0' index on the graph
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {   ///creates new chart
+            // The type of chart we want to create
+            type: 'bar',
+            
+            data: {
+                    labels: myLabels,
+                    datasets: [{
+                    label: "Task by Percent Completed",
+                    backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                     'rgba(54, 162, 235, 0.2)',
+                                     'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)'
+                    
+                                ],
+                                borderColor: [
+                                    'rgba(255,99,132,1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                     'rgba(75, 192, 192, 0.2)'
+                                ],
+                                borderWidth: 1,
+                    data: myData,  //data from SP list retrieve via rest api
+                    }]
+                    },
+                    
+                    // Configuration options go here
+                    options: {
+                        responsive: true,
+                            legend: {
+                            display: true,
+                                position: 'right',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Active Project Completion Pct.'
+                            },
+                            tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return + Number(tooltipItem.yLabel) + " %, getting it done !";
+                        }
+                    }
+                },
+                scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    },
+                            
+                                    
+                            animation: {
+                                animateScale: true,
+                                animateRotate: true
+                            }
+                    }
+                    });
+                    };
+            
+            function errorHandler() {
+                console.log('Error!');
+            }
+            
+            
+            </script>
+            
+            </body>
+            
+        
+        </html>
+        

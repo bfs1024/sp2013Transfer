@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8">
+
+<title>CSS Part Two</title>
+
+<style>
+body {
+  background-color:lightblue;
+}
+
+div{
+  padding:15px 20px 25px 30px;
+  background-color:#B633FF;
+  
+}
+
+form{
+  border:5px solid black;
+  float:right;
+  padding:75px;
+  margin-right:600px;
+  margin-bottom:150px;
+}
+
+a:hover{
+  color:#00e1ff;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div>I have so much left to learn!</div>
+
+
+
+<form action="https://formspree.io/your@email.com" method="POST">
+
+<label for="firstName">First Name:</label>
+
+<input id="firstName" type="text" placeholder="First Name">
+
+<br>
+
+<label for="lastName">Last Name:</label>
+
+<input id="lastName" type="text" placeholder="Last Name">
+
+<br>
+
+<label for="email">First Name:</label>
+
+<input id="email" type="email" placeholder="Email Address">
+
+<br>
+
+<label for="iceCream">Are you a cat or dog person?</label><br>
+
+<input type="radio" name="iceCream" value="cat" checked>Cat<br>
+
+<input type="radio" name="iceCream" value="dog">Dog<br>
+
+<input type="radio" name="iceCream" value="other">Other<br>
+
+
+
+<input type="submit" value="Send">
+
+</form>
+
+
+
+<a href="www.google.com">Click Me!</a>
+
+
+<script>
+    var myArray = [3,5,67,87,43,23,44,2,9,1]
+
+    for(var i =0;i < myArray.length;i++){
+        if(myArray[i] >= 10){
+            console.log("This number " + myArray[i] + " is a double digit number");
+        }else{
+            console.log("This number " + myArray[i] + " is a single digit number");
+        }
+    }
+
+
+var awesomeBirds = ["Bluebird","Roadrunner","Desert Dove","Pigeon"]
+
+for(var i = 0;i < awesomeBirds.length;i++){
+    if(awesomeBirds[i] === "Bluebird"){
+        alert("Bluebirds are so beautiful")
+    }else{
+        alert("Not as beautiful as Bluebirds");
+    }
+}
+    
+
+</script>
+</body>
+
+</html>

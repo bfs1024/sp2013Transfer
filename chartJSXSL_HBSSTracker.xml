@@ -1,0 +1,124 @@
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+    <xsl:output method="html" indent="yes"/>
+
+    <xsl:param name="WPQ"/>
+
+    <xsl:variable name="colors">28D27116A4B25E034407A04C47B514A415C204</xsl:variable>
+
+    <xsl:template match="/">
+
+        <script src="https://usff.navy.deps.mil/sites/netwarcom/N3/N33/bdev/Scripts/chartJSFiles.js"></script>
+
+        <script src="https://usff.navy.deps.mil/sites/netwarcom/N3/N33/bdev/Scripts/plotJSFile.js"></script>
+
+        <script src="https://usff.navy.deps.mil/sites/netwarcom/N3/N33/bdev/Scripts/chartJSFile_two.js"></script>
+
+        <canvas id="myChart_{$WPQ}" width="400" height="400"></canvas>
+
+        <div id="plotlyChart"></div>
+
+        <script>
+
+            var ctx = document.getElementById("myChart_<xsl:value-of select="$WPQ"/>");
+
+            var data = {
+
+              datasets: [{
+
+                data: [
+
+                    <xsl:apply-templates select="/dsQueryResponse/Rows/Row" mode="data"/>
+
+                ],
+
+                backgroundColor: [
+
+                    <xsl:for-each select="/dsQueryResponse/Rows/Row">
+
+                        <xsl:variable name="colorIndex" select="(position() - 1) mod 32 + 1"/>
+
+                        <xsl:variable name="color" select="substring($colors, $colorIndex, 6)"/>
+
+                        '<xsl:value-of select="$color"/>'
+
+                        <xsl:if test="not(position() = last())">,</xsl:if>
+
+                    </xsl:for-each>
+
+                ]
+
+              }],
+
+              labels: [
+
+                <xsl:apply-templates select="/dsQueryResponse/Rows/Row" mode="labels"/>
+
+              ]
+
+            };
+
+            // And for a doughnut chart
+
+            var myDoughnutChart = new Chart(ctx, {
+
+              type: 'doughnut',
+
+              data: data,
+
+              options: {
+			  
+				title: {
+					display: true,
+					text: 'Progress Bar'
+				},
+
+                responsive: false,
+
+                legend: {
+
+                    position: 'right'
+
+                }
+
+              }
+
+            });
+
+            var plotlyData = [{
+
+                values: [<xsl:apply-templates select="/dsQueryResponse/Rows/Row" mode="data"/>],
+
+                labels: [<xsl:apply-templates select="/dsQueryResponse/Rows/Row" mode="labels"/>],
+
+               type: 'pie'
+
+            }];
+
+            Plotly.newPlot('plotlyChart', plotlyData);
+
+        </script>
+
+    </xsl:template>
+
+    <xsl:template match="/dsQueryResponse/Rows/Row" mode="data">
+
+        <xsl:value-of select="@Status"/>
+
+        <!-- output a comma if the current item's position is NOT the last -->
+
+        <xsl:if test="not(position() = last())">,</xsl:if>
+
+    </xsl:template>
+
+    <xsl:template match="/dsQueryResponse/Rows/Row" mode="labels">
+
+        <!-- single quotes used because a Javascript "string" is being created for each @Title -->
+
+        '<xsl:value-of select="@Category"/>'
+
+        <xsl:if test="not(position() = last())">,</xsl:if>
+
+    </xsl:template>
+
+</xsl:stylesheet>
